@@ -1,23 +1,35 @@
-import logo from './logo.svg';
 import './App.css';
+import React from 'react';
+const { useState, useEffect } = React;
+
+const data = [{id: 0, label: "Istanbul, TR (AHL)"}, {id: 1, label: "Paris, FR (CDG)"}];
 
 function App() {
+
+    const [isOpen, setOpen] = useState(false);
+    const [items, setItem] = useState(data);
+    const [selectedItem, setSelectedItem] = useState(null);
+    
+    const toggleDropdown = () => setOpen(!isOpen);
+    
+    const handleItemClick = (id) => {
+      selectedItem == id ? setSelectedItem(null) : setSelectedItem(id);
+    }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className='dropdown'>
+      <div className='dropdown-header' onClick={toggleDropdown}>
+        {selectedItem ? items.find(item => item.id == selectedItem).label : "Select your destination"}
+        <i className={`fa fa-chevron-right icon ${isOpen && "open"}`}></i>
+      </div>
+      <div className={`dropdown-body ${isOpen && 'open'}`}>
+        {items.map(item => (
+          <div className="dropdown-item" onClick={e => handleItemClick(e.target.id)} id={item.id}>
+            <span className={`dropdown-item-dot ${item.id == selectedItem && 'selected'}`}>• </span>
+            {item.label}
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
